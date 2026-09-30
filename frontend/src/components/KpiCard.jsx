@@ -1,0 +1,1 @@
+export default function KpiCard({label,value,sub,icon:Icon}){return <div className="kpi"><div className="kpiIcon"><Icon size={20}/></div><div><span>{label}</span><strong>{value}</strong><small>{sub}</small></div></div>}

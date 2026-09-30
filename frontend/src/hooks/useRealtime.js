@@ -1,0 +1,3 @@
+import {useEffect,useState} from 'react';
+import {API,getToken} from '../services/api';
+export function useRealtime(eventId,onEvent){const [connected,setConnected]=useState(false);useEffect(()=>{if(!eventId)return;let ws;let timer;let closed=false;const connect=()=>{const url=API.replace(/^http/,'ws')+`/ws/events/${eventId}?token=${encodeURIComponent(getToken()||'')}`;ws=new WebSocket(url);ws.onopen=()=>setConnected(true);ws.onmessage=e=>onEvent(JSON.parse(e.data));ws.onclose=()=>{setConnected(false);if(!closed)timer=setTimeout(connect,2000)};ws.onerror=()=>setConnected(false)};connect();return()=>{closed=true;clearTimeout(timer);ws?.close()};},[eventId]);return connected}

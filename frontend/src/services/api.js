@@ -1,0 +1,5 @@
+const API=import.meta.env.VITE_API_URL||'http://localhost:8000';
+export const getToken=()=>localStorage.getItem('token');
+async function request(path,options={}){const headers={'Content-Type':'application/json',...(options.headers||{})};const t=getToken();if(t)headers.Authorization=`Bearer ${t}`;const r=await fetch(`${API}${path}`,{...options,headers});let data={};try{data=await r.json()}catch{}if(!r.ok)throw new Error(data.detail||'Request failed');return data}
+export const api={register:d=>request('/api/auth/register',{method:'POST',body:JSON.stringify(d)}),login:d=>request('/api/auth/login',{method:'POST',body:JSON.stringify(d)}),me:()=>request('/api/auth/me'),events:()=>request('/api/events'),createEvent:d=>request('/api/events',{method:'POST',body:JSON.stringify(d)}),rsvp:(id,d)=>request(`/api/events/${id}/rsvp`,{method:'POST',body:JSON.stringify(d)}),analytics:id=>request(`/api/events/${id}/analytics`),announce:(id,d)=>request(`/api/events/${id}/announcements`,{method:'POST',body:JSON.stringify(d)}),notifications:()=>request('/api/notifications')};
+export {API};
